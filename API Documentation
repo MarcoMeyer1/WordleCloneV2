@@ -1,0 +1,63 @@
+Wordle API Documentation:
+
+Provides endpoints for Wordle-like game functionalities.
+
+1. Generate Word Endpoint:
+   - Endpoint URL: /api/Wordle/generateWord
+   - HTTP Method: GET
+   - Request Parameters: None
+   - Response Format: JSON
+   - Example Request:
+     GET /api/Wordle/generateWord
+   - Example Response (200 OK):
+     {
+         "word": "apple"
+     }
+   - Error Handling:
+     - Returns 500 Internal Server Error if an unexpected error occurs.
+
+2. Check Word Endpoint:
+   - Endpoint URL: /api/Wordle/checkWord
+   - HTTP Method: POST
+   - Request Parameters:
+     - Body:
+       {
+           "GuessedWord": "string",
+           "CorrectWord": "string"
+       }
+   - Response Format: JSON
+   - Example Request:
+     POST /api/Wordle/checkWord
+     Request Body:
+     {
+         "GuessedWord": "apple",
+         "CorrectWord": "apple"
+     }
+   - Example Response (200 OK):
+     {
+         "Results": [
+             {
+                 "Letter": "a",
+                 "Status": "correct"
+             },
+             {
+                 "Letter": "p",
+                 "Status": "correct"
+             },
+             {
+                 "Letter": "p",
+                 "Status": "correct"
+             },
+             {
+                 "Letter": "l",
+                 "Status": "correct"
+             },
+             {
+                 "Letter": "e",
+                 "Status": "correct"
+             }
+         ]
+     }
+   - Error Handling:
+     - Returns 400 Bad Request if either GuessedWord or CorrectWord is null or empty.
+     - Returns 500 Internal Server Error if an unexpected error occurs.
