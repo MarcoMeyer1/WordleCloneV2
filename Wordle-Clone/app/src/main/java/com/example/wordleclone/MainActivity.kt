@@ -8,8 +8,6 @@ import android.text.Editable
 import android.widget.Button
 import android.widget.Toast
 import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
-import android.util.Log
 import android.widget.TextView
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -30,7 +28,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // Initialize Retrofit
+        // Initialize Retrofit to make API calls
         val retrofit = Retrofit.Builder()
             .baseUrl("https://wordlecloneapi.azurewebsites.net/api/")
             .addConverterFactory(GsonConverterFactory.create())
@@ -44,9 +42,6 @@ class MainActivity : AppCompatActivity() {
         // Initialize the EditTexts for the guesses
         initializeEditTexts()
 
-        // Log statement to check if editTexts is initialized
-        Log.d("MainActivity", "editTexts initialized: ${::editTexts.isInitialized}")
-
         // Set up the Enter button to submit a guess
         val btnEnter: Button = findViewById(R.id.btnEnter)
         btnEnter.setOnClickListener {
@@ -59,10 +54,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
-
     private fun initializeEditTexts() {
-        // Initialize each EditText individually
+        // Initialize EditTexts for user guesses
         editTexts = Array(6) { row ->
             when (row) {
                 0 -> arrayOf(
@@ -111,7 +104,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // Set up the text change listeners
+        // Set up text change listeners to handle user input
         for (row in editTexts.indices) {
             for (col in editTexts[row].indices) {
                 val editText = editTexts[row][col]
@@ -124,139 +117,64 @@ class MainActivity : AppCompatActivity() {
         editTexts[0][0].requestFocus()
     }
 
-
-
     private fun getCurrentGuess(): String {
+        // Get the current guess entered by the user
         return editTexts[0].joinToString("") { it.text.toString().trim() }
     }
 
-
-
-    private fun colorizeGuess(guess: String) {
-        val correctWordCharArray = currentWord.toCharArray()
-        val guessCharArray = guess.toCharArray()
-        val letterHasBeenUsed = BooleanArray(correctWordCharArray.size)
-
-        // Reset all colors to gray before setting them to the correct colors
-        resetSquaresColor()
-
-        // Iterate through each box in the grid
-        for (attemptIndex in 0 until currentAttempt) {
-            for (i in 0 until 5) {
-                val editText = editTexts[attemptIndex][i]
-
-                // First pass: Check for correct letters in the correct position
-                if (guessCharArray[i] == correctWordCharArray[i]) {
-                    editText.setBackgroundColor(Color.GREEN)
-                    letterHasBeenUsed[i] = true
-                } else {
-                    // Second pass: Check for correct letters in the wrong position
-                    val backgroundColor = (editText.background as? ColorDrawable)?.color
-
-                    if (backgroundColor != Color.GREEN) {
-                        val correctLetterIndex = correctWordCharArray.indices.indexOfFirst { index ->
-                            guessCharArray[i] == correctWordCharArray[index] && !letterHasBeenUsed[index]
+    private fun checkWord(guess: String) {
+        // Check the user's guess against the correct word
+        val requestBody = mapOf("guessedWord" to guess, "correctWord" to currentWord)
+        wordleApiService.checkWord(requestBody).enqueue(object : Callback<WordValidationResponse> {
+            override fun onResponse(call: Call<WordValidationResponse>, response: Response<WordValidationResponse>) {
+                response.body()?.let { validationResult ->
+                    runOnUiThread {
+                        for ((index, result) in validationResult.results.withIndex()) {
+                            val editText = editTexts[currentAttempt - 1][index]
+                            val color = when (result.status) {
+                                "correct" -> Color.GREEN
+                                "present" -> Color.YELLOW
+                                else -> Color.LTGRAY
+                            }
+                            editText.setBackgroundColor(color)
                         }
-
-                        if (correctLetterIndex != -1 && correctLetterIndex != i) {
-                            editText.setBackgroundColor(Color.parseColor("#FFA500")) // Orange color
-                            letterHasBeenUsed[correctLetterIndex] = true
-                        } else {
-                            editText.setBackgroundColor(Color.LTGRAY) // Gray color
-                        }
+                    }
+                    if (validationResult.results.all { it.status == "correct" }) {
+                        Toast.makeText(this@MainActivity, "Correct!", Toast.LENGTH_SHORT).show()
+                        // Handle win condition
+                    } else if (currentAttempt < 6) {
+                        handleNextGuessPreparation()
+                        currentAttempt++
+                    } else {
+                        // Handle game over condition
                     }
                 }
             }
-        }
-    }
 
-    private fun resetSquaresColor() {
-        for (row in editTexts) {
-            for (editText in row) {
-                editText.setBackgroundColor(Color.LTGRAY) // Reset to gray color
-            }
-        }
-    }
-
-    private fun checkWord(guess: String) {
-        // First, reset colors from the previous guess
-        resetSquaresColor()
-
-        // Then, update the UI with the current guess
-        for (i in 0 until 5) {
-            val editText = editTexts[currentAttempt - 1][i]
-            editText.setText(guess[i].toString())
-        }
-
-        // Check if the guessed word is correct
-        if (guess == currentWord) {
-            val toastMessage = "Correct guess!"
-            Toast.makeText(this@MainActivity, toastMessage, Toast.LENGTH_SHORT).show()
-
-            // Color the entire current row green since the guess is correct
-            for (editText in editTexts[currentAttempt - 1]) {
-                editText.setBackgroundColor(Color.GREEN)
-            }
-            // Disable further inputs or end the game as necessary
-            // ...
-        } else {
-            // If the guess is incorrect, color the guess accordingly
-            colorizeGuess(guess)
-
-            // Move to the next attempt and prepare the board for the next guess
-            handleNextGuessPreparation()
-        }
-
-        // Request focus on the first EditText of the next row for the next attempt
-        if (currentAttempt < 6) {
-            editTexts[0][0].requestFocus()
-        }
-    }
-
-    private fun handleNextGuessPreparation() {
-        // Only shift guesses down and clear the first row if there are attempts left
-        if (currentAttempt < 6) {
-            // Shift all guesses down by one row
-            for (row in 5 downTo 1) {
-                for (col in 0 until 5) {
-                    val previousEditText = editTexts[row - 1][col]
-                    val currentEditText = editTexts[row][col]
-                    currentEditText.setText(previousEditText.text)
-                }
-            }
-
-            // Clear the first row for the next input
-            for (editText in editTexts[0]) {
-                editText.text.clear()
-            }
-
-            // Increment attempt counter after shifting down
-            currentAttempt++
-        }
-    }
-
-
-
-
-
-    private fun generateNewWord() {
-        wordleApiService.generateWord().enqueue(object : Callback<Map<String, String>> {
-            override fun onResponse(call: Call<Map<String, String>>, response: Response<Map<String, String>>) {
-                if (response.isSuccessful) {
-                    currentWord = response.body()?.get("word") ?: ""
-                    Toast.makeText(this@MainActivity, "New word is $currentWord", Toast.LENGTH_SHORT).show() // for testing purposes
-                } else {
-                    Toast.makeText(this@MainActivity, "Failed to generate word", Toast.LENGTH_SHORT).show()
-                }
-            }
-
-            override fun onFailure(call: Call<Map<String, String>>, t: Throwable) {
+            override fun onFailure(call: Call<WordValidationResponse>, t: Throwable) {
                 Toast.makeText(this@MainActivity, "Error: ${t.message}", Toast.LENGTH_SHORT).show()
             }
         })
     }
 
+    private fun handleNextGuessPreparation() {
+        // Shift guesses down by one row for the next attempt
+        for (row in 5 downTo 1) {
+            for (col in 0 until 5) {
+                editTexts[row][col].setText(editTexts[row - 1][col].text.toString())
+                editTexts[row][col].background = editTexts[row - 1][col].background
+            }
+        }
+
+        // Clear the first row for the next attempt
+        for (editText in editTexts[0]) {
+            editText.text.clear()
+            editText.setBackgroundColor(Color.LTGRAY) // Set to gray anticipating the next guess
+        }
+    }
+
     private fun loadCorrectWord() {
+        // Load the correct word from the API
         wordleApiService.generateWord().enqueue(object : Callback<Map<String, String>> {
             override fun onResponse(call: Call<Map<String, String>>, response: Response<Map<String, String>>) {
                 if (response.isSuccessful) {
@@ -283,13 +201,20 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
     private interface WordleApiService {
         @GET("wordle/generateWord")
         fun generateWord(): Call<Map<String, String>>
 
         @POST("wordle/checkWord")
-        fun checkWord(@Body guessedWord: Map<String, String>): Call<Map<String, String>>
-
+        fun checkWord(@Body request: Map<String, String>): Call<WordValidationResponse>
     }
+
+    data class WordValidationResponse(
+        val results: List<LetterResult>
+    )
+
+    data class LetterResult(
+        val letter: Char,
+        val status: String // "correct", "present", "absent"
+    )
 }
