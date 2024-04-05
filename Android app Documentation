@@ -1,0 +1,39 @@
+WordleClone Documentation:
+
+This Android application is a clone of the popular game "Wordle". It allows users to guess a word and receive feedback on their guesses.
+
+1. Functionality Overview:
+   - The application communicates with a backend API to generate a random word and validate user guesses.
+   - Users input their guesses via EditText fields and submit them by pressing the "Enter" button.
+   - Feedback on the correctness of the guesses is displayed through background colors of the EditText fields.
+   - The game ends after six attempts or when the correct word is guessed.
+
+2. API Integration:
+   - Base URL: https://wordlecloneapi.azurewebsites.net/api/
+   - Endpoints:
+     a. GET /wordle/generateWord
+        - Generates a random word from the server.
+        - Response: {"word": "generated_word"}
+     b. POST /wordle/checkWord
+        - Validates a user's guess against the correct word.
+        - Request Body: {"guessedWord": "user_guess", "correctWord": "correct_word"}
+        - Response: {"results": [{"letter": "char", "status": "status"}]}
+            - status: "correct", "present", "absent"
+
+3. MainActivity Class:
+   - Handles user interactions and API calls.
+   - onCreate(): Initializes the UI components, Retrofit, and sets up event listeners.
+   - initializeEditTexts(): Sets up EditText fields for user input.
+   - getCurrentGuess(): Retrieves the current user guess from the EditText fields.
+   - checkWord(guess: String): Validates the user's guess by calling the API and updates UI accordingly.
+   - handleNextGuessPreparation(): Prepares for the next guess by shifting EditText fields.
+   - loadCorrectWord(): Fetches the correct word from the API and displays it.
+   - GuessTextWatcher: Listens to changes in EditText fields for automatic focus handling.
+
+4. WordleApiService Interface:
+   - Defines Retrofit endpoints for API communication.
+
+5. Data Classes:
+   - WordValidationResponse: Represents the response from the /checkWord endpoint.
+   - LetterResult: Represents the status of each letter in a word.
+
