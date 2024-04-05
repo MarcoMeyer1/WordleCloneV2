@@ -1,0 +1,6 @@
+@WordleCloneAPI_HostAddress = http://localhost:5267
+
+GET {{WordleCloneAPI_HostAddress}}/WordleController/
+Accept: application/json
+
+###

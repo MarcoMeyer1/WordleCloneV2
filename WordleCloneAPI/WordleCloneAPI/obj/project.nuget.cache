@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "dgSpecHash": "bQiCsVkkiSKcpojm7/T+B+FJBBrLenFGck9aiJJHVJa1HGu+hN3Kk1Ik51E8cKiWZFssCszGkb1ETknln1HS4g==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\Marco\\Desktop\\VC\\OPSC7311\\ICE1WordleClone\\WordleCloneAPI\\WordleCloneAPI\\WordleCloneAPI.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Marco\\.nuget\\packages\\microsoft.extensions.apidescription.server\\6.0.5\\microsoft.extensions.apidescription.server.6.0.5.nupkg.sha512",
+    "C:\\Users\\Marco\\.nuget\\packages\\microsoft.openapi\\1.2.3\\microsoft.openapi.1.2.3.nupkg.sha512",
+    "C:\\Users\\Marco\\.nuget\\packages\\swashbuckle.aspnetcore\\6.4.0\\swashbuckle.aspnetcore.6.4.0.nupkg.sha512",
+    "C:\\Users\\Marco\\.nuget\\packages\\swashbuckle.aspnetcore.swagger\\6.4.0\\swashbuckle.aspnetcore.swagger.6.4.0.nupkg.sha512",
+    "C:\\Users\\Marco\\.nuget\\packages\\swashbuckle.aspnetcore.swaggergen\\6.4.0\\swashbuckle.aspnetcore.swaggergen.6.4.0.nupkg.sha512",
+    "C:\\Users\\Marco\\.nuget\\packages\\swashbuckle.aspnetcore.swaggerui\\6.4.0\\swashbuckle.aspnetcore.swaggerui.6.4.0.nupkg.sha512"
+  ],
+  "logs": []
+}

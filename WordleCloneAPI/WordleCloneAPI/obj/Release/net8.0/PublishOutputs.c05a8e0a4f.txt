@@ -1,0 +1,11 @@
+C:\Users\Marco\Desktop\VC\OPSC7311\ICE1WordleClone\WordleCloneAPI\WordleCloneAPI\obj\Release\net8.0\PubTmp\Out\WordleCloneAPI.exe
+C:\Users\Marco\Desktop\VC\OPSC7311\ICE1WordleClone\WordleCloneAPI\WordleCloneAPI\obj\Release\net8.0\PubTmp\Out\appsettings.Development.json
+C:\Users\Marco\Desktop\VC\OPSC7311\ICE1WordleClone\WordleCloneAPI\WordleCloneAPI\obj\Release\net8.0\PubTmp\Out\appsettings.json
+C:\Users\Marco\Desktop\VC\OPSC7311\ICE1WordleClone\WordleCloneAPI\WordleCloneAPI\obj\Release\net8.0\PubTmp\Out\WordleCloneAPI.dll
+C:\Users\Marco\Desktop\VC\OPSC7311\ICE1WordleClone\WordleCloneAPI\WordleCloneAPI\obj\Release\net8.0\PubTmp\Out\WordleCloneAPI.deps.json
+C:\Users\Marco\Desktop\VC\OPSC7311\ICE1WordleClone\WordleCloneAPI\WordleCloneAPI\obj\Release\net8.0\PubTmp\Out\WordleCloneAPI.runtimeconfig.json
+C:\Users\Marco\Desktop\VC\OPSC7311\ICE1WordleClone\WordleCloneAPI\WordleCloneAPI\obj\Release\net8.0\PubTmp\Out\WordleCloneAPI.pdb
+C:\Users\Marco\Desktop\VC\OPSC7311\ICE1WordleClone\WordleCloneAPI\WordleCloneAPI\obj\Release\net8.0\PubTmp\Out\Microsoft.OpenApi.dll
+C:\Users\Marco\Desktop\VC\OPSC7311\ICE1WordleClone\WordleCloneAPI\WordleCloneAPI\obj\Release\net8.0\PubTmp\Out\Swashbuckle.AspNetCore.Swagger.dll
+C:\Users\Marco\Desktop\VC\OPSC7311\ICE1WordleClone\WordleCloneAPI\WordleCloneAPI\obj\Release\net8.0\PubTmp\Out\Swashbuckle.AspNetCore.SwaggerGen.dll
+C:\Users\Marco\Desktop\VC\OPSC7311\ICE1WordleClone\WordleCloneAPI\WordleCloneAPI\obj\Release\net8.0\PubTmp\Out\Swashbuckle.AspNetCore.SwaggerUI.dll
